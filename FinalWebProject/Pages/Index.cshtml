@@ -1,0 +1,73 @@
+﻿@page
+@model FinalWebProject.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Баллы";
+}
+
+@if (User.IsInRole("admin"))
+{
+    <form method="post" asp-page-handler="CreatePoint">
+        <div>
+            <p>Добавить баллы</p>
+        </div>
+        <div>
+            <label></label>
+            <select id="studentId" name="studentId" required>
+                @foreach (var student in Model.Students)
+                {
+                    <option value="@student.Id">@student.last_name+@student.first_name</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label></label>
+            <select id="subjectId" name="subjectId" required>
+                @foreach (var subject in Model.Subjects)
+                {
+                    <option value="@subject.Id">@subject.name</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label>Количество баллов</label>
+            <input type="text" name="value"/>
+        </div>
+        <button type="submit">Добавить</button>
+    </form>
+    <br/>
+}
+
+<table>
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Студент</th>
+        <th>Предмет</th>
+        <th>Баллы</th>
+        @if (User.IsInRole("admin"))
+        {
+            <th></th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var point in Model.Points)
+    {
+        <tr>
+            <td>@(Model.Points.IndexOf(point) + 1)</td>
+            <td>@point.Student.last_name @point.Student.first_name</td>
+            <td>@point.Subject.name</td>
+            <td>@point.value</td>
+            @if (User.IsInRole("admin"))
+            {
+                <td>
+                    <form method="post" asp-page-handler="DeletePoint" asp-route-id="@point.Id">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>

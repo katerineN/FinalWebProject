@@ -1,0 +1,55 @@
+﻿@page
+@model FinalWebProject.Pages.LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Вход на сайт</h1>
+
+<div style="text-align: center;">
+    <div id="loginForm">
+        <h3>Вход на сайт</h3>
+        <form method="post">
+            <label>Введите логин</label><br />
+            <input type="text" id="emailLogin" name="Username" /> <br /><br />
+            <label>Введите пароль</label><br />
+            <input type="password" id="passwordLogin" name="Password" /><br /><br />
+            <input type="submit" id="submitLogin" value="Логин" />
+        </form>
+    </div>
+    <div class="form-group">
+        <label for="token">Токен</label>
+        <input type="password" class="form-control" id="token" name="Token" required>
+    </div>
+</div>
+
+<script>
+    async function getTokenAsync() {
+        const formData = new FormData();
+        formData.append("username", document.getElementById("emailLogin").value);
+        formData.append("password", document.getElementById("passwordLogin").value);
+        formData.append("token", document.getElementById("token").value);
+
+        const response = await fetch("/token", {
+            method: "POST",
+            headers: { "Accept": "application/json" },
+            body: formData
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+
+        if (response.ok === true) {
+            if (data.redirectTo) {
+                window.location.href = data.redirectTo;
+            }
+        }
+    }
+
+    document.getElementById("submitLogin").addEventListener("click", e => {
+        e.preventDefault();
+        getTokenAsync();
+    });
+</script>

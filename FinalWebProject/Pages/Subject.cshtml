@@ -1,0 +1,55 @@
+﻿@page
+@model FinalWebProject.Pages.SubjectModel
+
+@{
+    ViewData["Title"] = "Предметы";
+}
+
+@if (User.IsInRole("admin"))
+{
+    <form method="post" asp-page-handler="CreateSubject">
+        <div>
+            <p>Добавить предмет</p>
+            <label>Название предмета</label>
+            <input type="text" name="name" />
+        </div>
+        <div>
+            <label>Имя преподавателя</label>
+            <input type="text" name="teacher_name" />
+        </div>
+        <button type="submit">Добавить</button>
+    </form>
+    <br />
+}
+
+<table>
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Название</th>
+        <th>Преподаватель</th>
+        @if (User.IsInRole("admin"))
+        {
+            <th></th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var subject in Model.Subjects)
+    {
+        <tr>
+            <td>@(Model.Subjects.IndexOf(subject) + 1)</td>
+            <td>@subject.name</td>
+            <td>@subject.teacher_name</td>
+            @if (User.IsInRole("admin"))
+            {
+                <td>
+                    <form method="post" asp-page-handler="DeleteSubject" asp-route-id="@subject.Id">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>

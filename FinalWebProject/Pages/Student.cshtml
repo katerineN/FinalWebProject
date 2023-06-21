@@ -1,0 +1,68 @@
+﻿@page
+@model FinalWebProject.Pages.StudentModel
+
+@{
+    ViewData["Title"] = "Студенты";
+}
+
+@if (User.IsInRole("admin"))
+{
+    <form method="post" asp-page-handler="CreateStudent">
+        <div>
+            <p>Добавить студента</p>
+            <label>Фамилия</label>
+            <input type="text" name="last_name" />
+        </div>
+        <div>
+            <label>Имя</label>
+            <input type="text" name="first_name" />
+        </div>
+        <div>
+            <label>Курс</label>
+            <input type="text" name="course" />
+        </div>
+        <div>
+            <label>Группа</label>
+            <input type="text" name="group" />
+        </div>
+        <button type="submit">Добавить</button>
+    </form>
+    <br />
+}
+
+<table>
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Курс</th>
+        <th>Группа</th>
+        @if (User.IsInRole("admin"))
+        {
+            <th></th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var student in Model.Students)
+    {
+        <tr>
+            <td>@(Model.Students.IndexOf(student) + 1)</td>
+            <td>@student.last_name</td>
+            <td>@student.first_name</td>
+            <td>@student.course</td>
+            <td>@student.group</td>
+            @if (User.IsInRole("admin"))
+            {
+                <td>
+                    <form method="post" asp-page-handler="DeleteStudent" asp-route-id="@student.Id">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>
+
